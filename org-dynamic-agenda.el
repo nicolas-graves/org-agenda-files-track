@@ -140,9 +140,5 @@ optional provided FILE or list of files."
 (advice-add 'org-agenda :before #'org-dynamic-agenda-cleanup-files)
 (advice-add 'org-todo-list :before #'org-dynamic-agenda-cleanup-files)
 
-(defvar savehist-additional-variables nil)
-(cl-pushnew 'org-agenda-files savehist-additional-variables)
-(add-hook 'savehist-save-hook #'org-dynamic-agenda-cleanup-files)
-
 (provide 'org-dynamic-agenda)
 ;;; org-dynamic-agenda.el ends here
