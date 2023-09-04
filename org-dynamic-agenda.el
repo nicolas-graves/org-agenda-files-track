@@ -138,6 +138,7 @@ optional provided FILE or list of files."
           (lambda ()
             (add-hook 'before-save-hook #'org-dynamic-agenda-update-file)))
 (advice-add 'org-agenda :before #'org-dynamic-agenda-cleanup-files)
+(advice-add 'org-agenda-redo :before #'org-dynamic-agenda-cleanup-files)
 (advice-add 'org-todo-list :before #'org-dynamic-agenda-cleanup-files)
 
 (provide 'org-dynamic-agenda)
