@@ -109,9 +109,13 @@ optional provided FILE."
 
   (defun org-dynamic-agenda-ql-extract-queries ()
     "Extract queries from an `org-ql' set of `org-agenda-custom-commands'."
-    (let ((blocks (apply #'append
-                         (mapcar #'caddr org-agenda-custom-commands))))
-      (mapcar #'cadr blocks)))
+    (let* ((blocks (apply #'append
+                          (mapcar #'caddr org-agenda-custom-commands)))
+           (org-ql-blocks (seq-filter (lambda (b)
+                                        (string-equal (symbol-name (car b))
+                                                      "org-ql-block"))
+                                      blocks)))
+      (mapcar #'cadr org-ql-blocks)))
 
   (defun org-dynamic-agenda-file-p (&optional file)
     "Check if the file should be added to the variable `org-agenda-files'.
