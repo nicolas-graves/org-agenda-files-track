@@ -9,7 +9,7 @@ This package will dynamically build a list of =org-agenda-files= worth consideri
 
 ** Org-ql integration
 
-By default, the package uses the =org-element= API, but when =(require 'org-ql)= is called, the =org-ql= backend is used instead. The cache of =org-ql= for the org note is built on save, so using pure =org-ql-block= commands in =org-agenda-custom-commands= should always take about 1/5th of the time of the equivalent =org-agenda=. See [[https://github.com/alphapapa/org-ql/blob/master/README.org#agenda-like-views][org-ql's readme]] for more info. 
+By default, the package uses the =org-element= API, but when using =(require 'org-ql-dynamic-agenda)=, the =org-ql= backend is used instead. The cache of =org-ql= for the org note is built on save, so using pure =org-ql-block= commands in =org-agenda-custom-commands= should always take about 1/5th of the time of the equivalent =org-agenda=. See [[https://github.com/alphapapa/org-ql/blob/master/README.org#agenda-like-views][org-ql's readme]] for more info. 
 
 To take full advantage of the =org-ql= integration and use pure =org-ql-block= commands, you should =(setq org-agenda-include-diary nil)= and use an equivalent =org-agenda-custom-commands= for the diary (I haven't done it yet, contributions welcome!).
 
