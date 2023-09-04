@@ -3,7 +3,7 @@
 ;; Copyright © 2023 Nicolas Graves <ngraves@ngraves.fr>
 
 ;; Author: Nicolas Graves <ngraves@ngraves.fr>
-;; Version: 0.0.0
+;; Version: 0.1.0
 ;; Package-Requires: ((emacs "27.1"))
 ;; Keywords: data, files, tools
 ;; URL: https://git.sr.ht/~ngraves/org-dynamic-agenda.el
