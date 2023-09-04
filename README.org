@@ -1,0 +1,29 @@
+
+* org-dynamic-agenda
+
+Use the =org-persist= cache and a hook to dynamically build =org-agenda-files= fast.
+
+Once you know what you are looking in an agenda with your own =org-agenda-custom-commands=, parsing files each time you want to refresh it is a waste of time and resources.
+
+This package will dynamically build a list of org-elements that are cached with the help of the builtin =org-persist= and =org-element= API.
+
+Doing the same thing would be possible using =org-roam= and =org-roam-ql=, but I'd like to use my =org-roam= files for knowledge management and keep task management separate. Since all is builtin, maybe it's also better for upstream if the package has to be considered at some point.
+
+** Configuration
+
+** Changelog
+
+Just getting started !
+
+** Relation to other files / packages
+
+The original source of inspiration for this package is the post [[https://d12frosted.io/posts/2021-01-16-task-management-with-roam-vol5.html][Task management with org-roam Vol. 5: Dynamic and fast agenda]] by Boris Biluga.
+
+Since one might also want to have this feature outside org-roam (they are in my dailies for instance, which I don't like to mingle with my org-roam database), I decided to use them to build it.
+
+| package     | cache       | commentary                              |
+|-------------+-------------+-----------------------------------------|
+| org-roam    | sqlite      | original inspiration                    |
+| org-ql      | custom (?)  | use the ql + org-agenda-custom-commands |
+| org-roam-ql | org-roam's  | could do the same thing with sqlite db  |
+| org-element | org-persist | builtin API I'll use                    |
