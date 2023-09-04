@@ -1,29 +1,54 @@
 
 * org-dynamic-agenda
 
-Use the =org-persist= cache and a hook to dynamically build =org-agenda-files= fast.
+Use =before-save-hook= on org files to dynamically build =org-agenda-files= and speed up =org-agenda=.
 
-Once you know what you are looking in an agenda with your own =org-agenda-custom-commands=, parsing files each time you want to refresh it is a waste of time and resources.
+You use a lot of small org files. Once you know what you are looking for in an agenda, parsing lots of files on every refresh is a waste of time and resources.
 
-This package will dynamically build a list of org-elements that are cached with the help of the builtin =org-persist= and =org-element= API.
+This package will dynamically build a list of =org-agenda-files= worth considering when using =org-agenda= based on the =org-dynamic-agenda-file-p= predicate. This allows for instance to have an ever-extending journal / dailies directory (or project-specifid todo / inbox files) where you handle some of your TODOs, but never having to really care about the number of files (except if you change your expectations / your =org-agenda-custom-commands= and have to manually add some =org-agenda-files=).
 
-Doing the same thing would be possible using =org-roam= and =org-roam-ql=, but I'd like to use my =org-roam= files for knowledge management and keep task management separate. Since all is builtin, maybe it's also better for upstream if the package has to be considered at some point.
+** Org-ql integration
+
+By default, the package uses the =org-element= API, but when =(require 'org-ql)= is called, the =org-ql= backend is used instead. The cache of =org-ql= for the org note is built on save, so using pure =org-ql-block= commands in =org-agenda-custom-commands= should always take about 1/5th of the time of the equivalent =org-agenda=. See [[https://github.com/alphapapa/org-ql/blob/master/README.org#agenda-like-views][org-ql's readme]] for more info. 
+
+To take full advantage of the =org-ql= integration and use pure =org-ql-block= commands, you should =(setq org-agenda-include-diary nil)= and use an equivalent =org-agenda-custom-commands= for the diary (I haven't done it yet, contributions welcome!).
 
 ** Configuration
 
+Both values of =org-agenda-files= (a file path or a list of files) are supported, since we use a native =org-agenda= saving method. 
+
+*You should redefine the predicate inside =org-dynamic-agenda--file-p= to match what you consider should be your =org-agenda-files=.* Usually that would mean matching all the contents you can parse with =org-agenda= commands and =org-agenda-custom-commands=.
+
+With =org-ql= integration, =org-agenda-custom-commands= are parsed directly, so you don't even have to define any predicate. It's possible that some parsing errors get in the way at first, please report them if you experience any. 
+
+*** Initially defining or redefining =org-agenda-files=
+
+One simple method is to record all possible org files and then cleanup which files are agenda-files. This is the part that will take time. For instance: 
+
+#+begin_src elisp
+(org-store-new-agenda-file-list
+      (seq-filter (lambda (f) (string-suffix-p ".org" f))
+                  (directory-files "~/org/journal/" t)))
+
+(org-dynamic-agenda-cleanup-files t)
+#+end_src
+
 ** Changelog
 
-Just getting started !
+It's only getting started!
+
+MAYBE TODO: redefine =org-dynamic-agenda--file-p= to match all possible =org-agenda= commands, current default config is a bit minimalist.
+
+MAYBE TODO: rewrite native =org-agenda= commands in the case of =org-ql= integration, so that all native commands are also 5x faster.
+
+MAYBE TODO: investigate integration with =org-super-agenda=.
 
 ** Relation to other files / packages
 
-The original source of inspiration for this package is the post [[https://d12frosted.io/posts/2021-01-16-task-management-with-roam-vol5.html][Task management with org-roam Vol. 5: Dynamic and fast agenda]] by Boris Biluga.
+The original source of inspiration for this package is the post [[https://d12frosted.io/posts/2021-01-16-task-management-with-roam-vol5.html][Task management with org-roam Vol. 5: Dynamic and fast agenda]] by Boris Biluga. But since I'd like to use my =org-roam= files for knowledge management and keep task management separate, I decided to make a package out of it to build it.
 
-Since one might also want to have this feature outside org-roam (they are in my dailies for instance, which I don't like to mingle with my org-roam database), I decided to use them to build it.
+In the process of writing the package, I discovered [[https://www.armindarvish.com/en/post/emacs_workflow_dynamically_adding_files_to_org-agenda-files/][Armin Darvish's implementation]] which basically does the same thing, on which I added a few improvements (namely: native save, org-ql integration, more general utility functions). 
 
-| package     | cache       | commentary                              |
-|-------------+-------------+-----------------------------------------|
-| org-roam    | sqlite      | original inspiration                    |
-| org-ql      | custom (?)  | use the ql + org-agenda-custom-commands |
-| org-roam-ql | org-roam's  | could do the same thing with sqlite db  |
-| org-element | org-persist | builtin API I'll use                    |
+This package functions both on builtin functionality and with =org-ql= clarity and speed improvements.
+
+Finally, the same package could be done with =org-roam= and =org-roam-ql= (with some more work, could be faster (you might not need more speed than here though) since you can read from the database without having to parse files), but it mingles knowledge and task management (at least without setting some separating filters on database read). 

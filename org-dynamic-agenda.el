@@ -104,9 +104,6 @@ optional provided FILE."
 (declare-function org-ql-select "org-ql")
 (declare-function org-dynamic-agenda-ql-extract-queries "org-dynamic-agenda")
 (with-eval-after-load 'org-ql
-  ;; The diary is not sped up by org-ql. Default not to use it.
-  (setq org-agenda-include-diary nil)
-
   (defvar org-dynamic-agenda-ql-queries nil
     "Cache for `org-ql' queries defined from `org-agenda-custom-commands'.")
 
@@ -121,7 +118,7 @@ optional provided FILE."
 
 This version of the function requires `org-agenda-custom-commands' to
 be defined with `orq-ql-block'. The result of this function is cached,
-meaning that it will load much faster on the second run
+meaning that it will load much faster on the second run.
 
 The function is supposed to be run in an `org-mode' file, or in an
 optional provided FILE or list of files."
