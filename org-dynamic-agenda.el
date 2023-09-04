@@ -49,20 +49,23 @@ The function is supposed to be run in an `org-mode' file, or in an
 optional provided FILE."
   (interactive)
   (when (and (derived-mode-p 'org-mode) (buffer-file-name))
-    (if (org-dynamic-agenda-file-p file)
-        (cl-pushnew (file-truename (buffer-file-name)) org-agenda-files
-                    :test #'string-equal)
-      (cl-delete (file-truename (buffer-file-name)) org-agenda-files
-                 :test #'string-equal))))
+    (let ((files (org-agenda-files)))
+      (if (org-dynamic-agenda-file-p file)
+          (cl-pushnew (file-truename (buffer-file-name)) files
+                      :test #'string-equal)
+        (cl-delete (file-truename (buffer-file-name)) files
+                   :test #'string-equal))
+      (org-store-new-agenda-file-list files))))
 
 (defun org-dynamic-agenda-cleanup-files (&optional full)
   "Cleanup variable `org-agenda-files'.
 
 If FULL, rechecks the files with `org-dynamic-agenda-file-p'."
   (interactive)
-  (if full
-      (cl-delete-if-not #'org-dynamic-agenda-file-p org-agenda-files)
-    (cl-delete-if-not #'file-readable-p org-agenda-files)))
+  (org-store-new-agenda-file-list
+   (if full
+       (cl-remove-if-not #'org-dynamic-agenda-file-p (org-agenda-files))
+     (cl-remove-if-not #'file-readable-p (org-agenda-files)))))
 
 ;; With builtin org-element
 (require 'org-element)
