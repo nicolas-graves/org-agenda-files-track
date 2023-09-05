@@ -95,7 +95,12 @@ optional provided FILE."
   (when file
     (message "org-ql-dynamic-agenda-file-p: processing %s" file))
   (seq-reduce (lambda (bool query)
-                (or bool (org-ql-select (or file (current-buffer)) query)))
+                (or bool (org-ql-select
+                           (or file (current-buffer))
+                           query
+                           ;; just matching, don’t run
+                           ;; org-element-headline-parser
+                           :action #'point)))
               org-ql-dynamic-agenda-queries
               nil))
 
