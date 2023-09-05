@@ -52,9 +52,9 @@ optional provided FILE."
 If FULL, rechecks the files with `org-dynamic-agenda-file-p'."
   (interactive)
   (org-store-new-agenda-file-list
-   (if full
-       (cl-remove-if-not #'org-dynamic-agenda-file-p (org-agenda-files))
-     (cl-remove-if-not #'file-readable-p (org-agenda-files)))))
+   (cl-remove-if-not (if full #'org-dynamic-agenda-file-p
+                       #'file-readable-p)
+                     (org-agenda-files))))
 
 (defun org-dynamic-agenda--file-p ()
   "Check if the file should be added to the variable `org-agenda-files'."

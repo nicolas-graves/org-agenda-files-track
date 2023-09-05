@@ -52,9 +52,9 @@ optional provided FILE."
 If FULL, rechecks the files with `org-dynamic-agenda-file-p'."
   (interactive)
   (org-store-new-agenda-file-list
-   (if full
-       (cl-remove-if-not #'org-ql-dynamic-agenda-file-p (org-agenda-files))
-     (cl-remove-if-not #'file-readable-p (org-agenda-files)))))
+   (cl-remove-if-not (if full #'org-ql-dynamic-agenda-file-p
+                       #'file-readable-p)
+                     (org-agenda-files))))
 
 (defvar org-ql-dynamic-agenda-queries nil
   "Cache for `org-ql' queries defined from `org-agenda-custom-commands'.")
