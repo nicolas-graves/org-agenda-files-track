@@ -63,9 +63,7 @@ If FULL, rechecks the files with `org-dynamic-agenda-file-p'."
        'headline
      ;; This is the predicate matching if a headlines makes an org-agenda-file.
      (lambda (h)
-       (or (eq (org-element-property :todo-type h) 'todo)
-           (org-element-property :scheduled h)
-           (org-element-property :deadline h)))
+       (eq (org-element-property :todo-type h) 'todo))
      nil 'first-match))
 
 (defun org-dynamic-agenda-file-p (&optional file)
