@@ -27,6 +27,7 @@
 ;;; Code:
 (require 'org-agenda)
 (require 'org-ql)
+(require 'org-ql-view)
 (require 'cl-lib)
 
 ;;; Common
@@ -60,14 +61,22 @@ If FULL, rechecks the files with `org-dynamic-agenda-file-p'."
   "Cache for `org-ql' queries defined from `org-agenda-custom-commands'.")
 
 (defun org-ql-dynamic-agenda-extract-queries ()
-  "Extract queries from an `org-ql' set of `org-agenda-custom-commands'."
+  "Extract queries from user-defined custom variables.
+
+Extracts queries from an `org-ql' set of
+`org-agenda-custom-commands' as well as `org-ql-views'."
   (let* ((blocks (apply #'append
                         (mapcar #'caddr org-agenda-custom-commands)))
          (org-ql-blocks (seq-filter (lambda (b)
                                       (string-equal (symbol-name (car b))
                                                     "org-ql-block"))
                                     blocks)))
-    (mapcar #'cadr org-ql-blocks)))
+    (append
+     (mapcar #'cadr org-ql-blocks)
+     ;; ignore views that take a function, which build the query at runtime
+     (seq-filter #'identity
+                 (mapcar (lambda (view)
+                           (plist-get (cdr view) :query)) org-ql-views)))))
 
 (defun org-ql-dynamic-agenda-file-p (&optional file)
   "Check if the file should be added to the variable `org-agenda-files'.
