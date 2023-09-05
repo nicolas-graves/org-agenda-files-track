@@ -26,11 +26,30 @@ With =org-ql= integration, =org-agenda-custom-commands= and =org-ql-views= are p
 One simple method is to record all possible org files and then cleanup which files are agenda-files. This is the part that will take time. For instance: 
 
 #+begin_src elisp
-(org-store-new-agenda-file-list
-      (seq-filter (lambda (f) (string-suffix-p ".org" f))
-                  (directory-files "~/org/journal/" t)))
+(defun my/org-dynamic-agenda-init ()
+  "(Re)initialize dynamic agenda files.
 
-(org-dynamic-agenda-cleanup-files t)
+This can take a long time, so it is recommended to run this only
+on installation and when first tasks are added to many files via
+methods the save hook cannot detect, like file synchronization."
+  (interactive)
+  ;; ;; uncomment if storing org-agenda-files in file
+  ;; (make-empty-file org-agenda-files 'force)
+  (org-store-new-agenda-file-list
+   (directory-files-recursively
+    org-directory (rx ".org" eos) nil
+    ;; ignore hidden directories like .git and .attach
+    (lambda (subdir)
+      (not (eq ?. (string-to-char (file-name-nondirectory subdir)))))))
+  ;; use ql here if desired
+  (org-dynamic-agenda-cleanup-files 'full)
+  (message "Initialized agenda files"))
+#+end_src
+
+To avoid reinitializing =org-agenda-files= every time Emacs starts, you will likely want to set =org-agenda-files= to a single filename to persist =org-agenda-files= across Emacs sessions:
+#+begin_src elisp
+(setq org-agenda-files
+      (expand-file-name "org-agenda-files.txt" (xdg-cache-home)))
 #+end_src
 
 ** Changelog
