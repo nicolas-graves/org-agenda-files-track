@@ -90,9 +90,13 @@ optional provided FILE."
               org-ql-dynamic-agenda-queries
               t))
 
-(add-hook 'org-mode-hook
-          (lambda ()
-            (add-hook 'before-save-hook #'org-ql-dynamic-agenda-update-file)))
+(defun org-ql-dynamic-agenda-update-file-h ()
+  "Conditionally add dynamic agenda hook to Org buffers."
+  (when (and (buffer-file-name)
+             (file-in-directory-p (buffer-file-name) org-directory))
+    (add-hook 'before-save-hook #'org-ql-dynamic-agenda-update-file)))
+
+(add-hook 'org-mode-hook #'org-ql-dynamic-agenda-update-file-h)
 (advice-add 'org-agenda :before #'org-ql-dynamic-agenda-cleanup-files)
 (advice-add 'org-agenda-redo :before #'org-ql-dynamic-agenda-cleanup-files)
 (advice-add 'org-todo-list :before #'org-ql-dynamic-agenda-cleanup-files)

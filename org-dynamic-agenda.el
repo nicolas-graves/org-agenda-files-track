@@ -86,9 +86,13 @@ optional provided FILE."
             (org-dynamic-agenda--file-p)
           (setq buffer-file-name nil))))))
 
-(add-hook 'org-mode-hook
-          (lambda ()
-            (add-hook 'before-save-hook #'org-dynamic-agenda-update-file)))
+(defun org-dynamic-agenda-update-file-h ()
+  "Conditionally add dynamic agenda hook to Org buffers."
+  (when (and (buffer-file-name)
+             (file-in-directory-p (buffer-file-name) org-directory))
+    (add-hook 'before-save-hook #'org-dynamic-agenda-update-file)))
+
+(add-hook 'org-mode-hook #'org-dynamic-agenda-update-file-h)
 (advice-add 'org-agenda :before #'org-dynamic-agenda-cleanup-files)
 (advice-add 'org-agenda-redo :before #'org-dynamic-agenda-cleanup-files)
 (advice-add 'org-todo-list :before #'org-dynamic-agenda-cleanup-files)
