@@ -86,9 +86,9 @@ optional provided FILE."
   (when file
     (message "org-ql-dynamic-agenda-file-p: processing %s" file))
   (seq-reduce (lambda (bool query)
-                (and bool (org-ql-select (or file (current-buffer)) query)))
+                (or bool (org-ql-select (or file (current-buffer)) query)))
               org-ql-dynamic-agenda-queries
-              t))
+              nil))
 
 (defun org-ql-dynamic-agenda-update-file-h ()
   "Conditionally add dynamic agenda hook to Org buffers."
