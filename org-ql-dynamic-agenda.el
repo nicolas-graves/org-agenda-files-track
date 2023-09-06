@@ -82,9 +82,11 @@ optional provided FILE."
   (unless org-ql-dynamic-agenda-queries
     (setq org-ql-dynamic-agenda-queries
           (org-ql-dynamic-agenda-extract-queries)))
+
+  (when file
+    (message "org-ql-dynamic-agenda-file-p: processing %s" file))
   (seq-reduce (lambda (bool query)
-                (and bool (org-ql-select
-                            (or file (buffer-file-name)) query)))
+                (and bool (org-ql-select (or file (current-buffer)) query)))
               org-ql-dynamic-agenda-queries
               t))
 
