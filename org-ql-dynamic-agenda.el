@@ -97,7 +97,7 @@ optional provided FILE or list of files."
   (let ((files (if file
                    (org-ql-dynamic-agenda--check-file-list file)
                  (list (buffer-file-name)))))
-    (seq-reduce (lambda (query bool)
+    (seq-reduce (lambda (bool query)
                   (and bool (org-ql-select files query)))
                 org-ql-dynamic-agenda-queries
                 t)))
