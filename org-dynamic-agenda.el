@@ -76,11 +76,17 @@ optional provided FILE."
   (interactive)
   (if (not file)
       (org-dynamic-agenda--file-p)
-    (find-file file)
-    (let ((original-buffer (current-buffer))
-          (result (org-dynamic-agenda--file-p)))
-      (switch-to-buffer original-buffer)
-      result)))
+    (message "org-dynamic-agenda-file-p: processing %s" file)
+    (if-let ((buffer (find-buffer-visiting file)))
+        (with-current-buffer buffer
+          (org-dynamic-agenda--file-p))
+      (with-temp-buffer
+        (delay-mode-hooks (org-mode))
+        (insert-file-contents file)
+        (setq buffer-file-name file)
+        (unwind-protect
+            (org-dynamic-agenda--file-p)
+          (setq buffer-file-name nil))))))
 
 (add-hook 'org-mode-hook
           (lambda ()
