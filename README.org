@@ -17,7 +17,7 @@ To take full advantage of the =org-ql= integration and use pure =org-ql-block= c
 
 Both values of =org-agenda-files= (a file path or a list of files) are supported, since we use a native =org-agenda= saving method. 
 
-*You should redefine the predicate inside* =org-dynamic-agenda--file-p= *to match what you consider should be your* =org-agenda-files= *.* Usually that would mean matching all the contents you can parse with =org-agenda= commands and =org-agenda-custom-commands=.
+*You should redefine the predicate inside* =org-dynamic-agenda--file-p= *to match what you consider should be your* =org-agenda-files= *.* Usually that would mean matching all the contents you can parse with =org-agenda= commands and =org-agenda-custom-commands=. You can use =pp-eval-expression= to test =(org-dynamic-agenda-file-p)= with open buffers as you modify it.
 
 With =org-ql= integration, =org-agenda-custom-commands= and =org-ql-views= are parsed directly, so you don't even have to define any predicate. It's possible that some parsing errors get in the way at first, please report them if you experience any.
 

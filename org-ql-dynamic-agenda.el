@@ -37,7 +37,6 @@
 
 The function is supposed to be run in an `org-mode' file, or in an
 optional provided FILE."
-  (interactive)
   (when (and (derived-mode-p 'org-mode) (buffer-file-name))
     (let ((files (org-agenda-files)))
       (if (org-ql-dynamic-agenda-file-p file)
@@ -51,7 +50,6 @@ optional provided FILE."
   "Cleanup variable `org-agenda-files'.
 
 If FULL, rechecks the files with `org-dynamic-agenda-file-p'."
-  (interactive)
   (org-store-new-agenda-file-list
    (cl-remove-if-not (if full #'org-ql-dynamic-agenda-file-p
                        #'file-readable-p)
@@ -87,7 +85,6 @@ meaning that it will load much faster on the second run.
 
 The function is supposed to be run in an `org-mode' file, or in an
 optional provided FILE."
-  (interactive)
   (unless org-ql-dynamic-agenda-queries
     (setq org-ql-dynamic-agenda-queries
           (org-ql-dynamic-agenda-extract-queries)))
