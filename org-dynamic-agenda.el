@@ -31,18 +31,6 @@
 
 ;;; Common
 
-(defun org-dynamic-agenda--check-file-list (files)
-  "Check that FILES is an existing file or a list of them.
-Returns the list of valid files at compile time."
-  (let ((valid-files '())
-        (file-list (if (stringp files) (list files) files)))
-    (dolist (file file-list)
-      (unless (file-readable-p file)
-        (error "\
-File in org-dynamic-agenda-check-file-list is not readable: %s" file))
-      (push file valid-files))
-    (reverse valid-files)))
-
 (defun org-dynamic-agenda-update-file (&optional file)
   "Update variable `org-agenda-files'.
 
@@ -86,17 +74,13 @@ If FULL, rechecks the files with `org-dynamic-agenda-file-p'."
 The function is supposed to be run in an `org-mode' file, or in an
 optional provided FILE."
   (interactive)
-  (if file
-      (let ((original-buffer (current-buffer))
-            (result (seq-reduce
-                     (lambda (bool f)
-                       (find-file f)
-                       (and bool (org-dynamic-agenda--file-p)))
-                     (org-dynamic-agenda--check-file-list file)
-                     t)))
-        (switch-to-buffer original-buffer)
-        result)
-    (org-dynamic-agenda--file-p)))
+  (if (not file)
+      (org-dynamic-agenda--file-p)
+    (find-file file)
+    (let ((original-buffer (current-buffer))
+          (result (org-dynamic-agenda--file-p)))
+      (switch-to-buffer original-buffer)
+      result)))
 
 (add-hook 'org-mode-hook
           (lambda ()
