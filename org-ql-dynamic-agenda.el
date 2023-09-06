@@ -31,18 +31,6 @@
 
 ;;; Common
 
-(defun org-ql-dynamic-agenda--check-file-list (files)
-  "Check that FILES is an existing file or a list of them.
-Returns the list of valid files at compile time."
-  (let ((valid-files '())
-        (file-list (if (stringp files) (list files) files)))
-    (dolist (file file-list)
-      (unless (file-readable-p file)
-        (error "\
-File in org-dynamic-agenda-check-file-list is not readable: %s" file))
-      (push file valid-files))
-    (reverse valid-files)))
-
 (defun org-ql-dynamic-agenda-update-file (&optional file)
   "Update variable `org-agenda-files'.
 
@@ -89,18 +77,16 @@ be defined with `orq-ql-block'. The result of this function is cached,
 meaning that it will load much faster on the second run.
 
 The function is supposed to be run in an `org-mode' file, or in an
-optional provided FILE or list of files."
+optional provided FILE."
   (interactive)
   (unless org-ql-dynamic-agenda-queries
     (setq org-ql-dynamic-agenda-queries
           (org-ql-dynamic-agenda-extract-queries)))
-  (let ((files (if file
-                   (org-ql-dynamic-agenda--check-file-list file)
-                 (list (buffer-file-name)))))
-    (seq-reduce (lambda (bool query)
-                  (and bool (org-ql-select files query)))
-                org-ql-dynamic-agenda-queries
-                t)))
+  (seq-reduce (lambda (bool query)
+                (and bool (org-ql-select
+                            (or file (buffer-file-name)) query)))
+              org-ql-dynamic-agenda-queries
+              t))
 
 (add-hook 'org-mode-hook
           (lambda ()
