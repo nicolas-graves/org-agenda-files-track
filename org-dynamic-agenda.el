@@ -36,7 +36,6 @@
 
 The function is supposed to be run in an `org-mode' file, or in an
 optional provided FILE."
-  (interactive)
   (when (and (derived-mode-p 'org-mode) (buffer-file-name))
     (let ((files (org-agenda-files)))
       (if (org-dynamic-agenda-file-p file)
@@ -50,7 +49,6 @@ optional provided FILE."
   "Cleanup variable `org-agenda-files'.
 
 If FULL, rechecks the files with `org-dynamic-agenda-file-p'."
-  (interactive)
   (org-store-new-agenda-file-list
    (cl-remove-if-not (if full #'org-dynamic-agenda-file-p
                        #'file-readable-p)
@@ -71,7 +69,6 @@ If FULL, rechecks the files with `org-dynamic-agenda-file-p'."
 
 The function is supposed to be run in an `org-mode' file, or in an
 optional provided FILE."
-  (interactive)
   (if (not file)
       (org-dynamic-agenda--file-p)
     (message "org-dynamic-agenda-file-p: processing %s" file)
