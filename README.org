@@ -5,7 +5,7 @@ Use =before-save-hook= on org files to dynamically build =org-agenda-files= and 
 
 You use a lot of small org files. Once you know what you are looking for in an agenda, parsing lots of files on every refresh is a waste of time and resources.
 
-This package will dynamically build a list of =org-agenda-files= worth considering when using =org-agenda= based on the =org-dynamic-agenda-file-p= predicate. This allows for instance to have an ever-extending journal / dailies directory (or project-specifid todo / inbox files) where you handle some of your TODOs, but never having to really care about the number of files (except if you change your expectations / your =org-agenda-custom-commands= and have to manually add some =org-agenda-files=).
+This package will dynamically build a list of =org-agenda-files= worth considering when using =org-agenda= based on the =org-dynamic-agenda-file-p= predicate. This allows for instance to have an ever-extending journal / dailies directory (or project-specific todo / inbox files) where you handle some of your TODOs, but never having to really care about the number of files (except if you change your expectations / your =org-agenda-custom-commands= and have to manually add some =org-agenda-files=).
 
 ** Org-ql integration
 
@@ -64,7 +64,7 @@ MAYBE TODO: investigate integration with =org-super-agenda=.
 
 ** Relation to other files / packages
 
-The original source of inspiration for this package is the post [[https://d12frosted.io/posts/2021-01-16-task-management-with-roam-vol5.html][Task management with org-roam Vol. 5: Dynamic and fast agenda]] by Boris Biluga. But since I'd like to use my =org-roam= files for knowledge management and keep task management separate, I decided to make a package out of it to build it.
+The original source of inspiration for this package is the post [[https://d12frosted.io/posts/2021-01-16-task-management-with-roam-vol5.html][Task management with org-roam Vol. 5: Dynamic and fast agenda]] by Boris Buliga. But since I'd like to use my =org-roam= files for knowledge management and keep task management separate, I decided to make a package out of it to build it.
 
 In the process of writing the package, I discovered [[https://www.armindarvish.com/en/post/emacs_workflow_dynamically_adding_files_to_org-agenda-files/][Armin Darvish's implementation]] which basically does the same thing, on which I added a few improvements (namely: native save, org-ql integration, more general utility functions). 
 
