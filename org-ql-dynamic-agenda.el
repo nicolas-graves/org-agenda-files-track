@@ -55,9 +55,6 @@ If FULL, rechecks the files with `org-dynamic-agenda-file-p'."
                        #'file-readable-p)
                      (org-agenda-files))))
 
-(defvar org-ql-dynamic-agenda-queries nil
-  "Cache for `org-ql' queries defined from `org-agenda-custom-commands'.")
-
 (defun org-ql-dynamic-agenda-extract-queries ()
   "Extract queries from user-defined custom variables.
 
@@ -85,10 +82,6 @@ meaning that it will load much faster on the second run.
 
 The function is supposed to be run in an `org-mode' file, or in an
 optional provided FILE."
-  (unless org-ql-dynamic-agenda-queries
-    (setq org-ql-dynamic-agenda-queries
-          (org-ql-dynamic-agenda-extract-queries)))
-
   (when file
     (message "org-ql-dynamic-agenda-file-p: processing %s" file))
   (seq-reduce (lambda (bool query)
@@ -98,7 +91,7 @@ optional provided FILE."
                            ;; just matching, don’t run
                            ;; org-element-headline-parser
                            :action #'point)))
-              org-ql-dynamic-agenda-queries
+              (org-ql-dynamic-agenda-extract-queries)
               nil))
 
 (defun org-ql-dynamic-agenda-update-file-h ()
