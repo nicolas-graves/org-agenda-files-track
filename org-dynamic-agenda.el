@@ -41,8 +41,8 @@ optional provided FILE."
       (if (org-dynamic-agenda-file-p file)
           (cl-pushnew (file-truename (buffer-file-name)) files
                       :test #'string-equal)
-        (cl-delete (file-truename (buffer-file-name)) files
-                   :test #'string-equal))
+        (setq files (cl-delete (file-truename (buffer-file-name)) files
+                               :test #'string-equal)))
       (org-store-new-agenda-file-list files))))
 
 (defun org-dynamic-agenda-cleanup-files (&optional full)
