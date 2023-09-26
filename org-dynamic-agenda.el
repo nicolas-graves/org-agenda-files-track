@@ -54,7 +54,7 @@ If FULL, rechecks the files with `org-dynamic-agenda-file-p'."
                        #'file-readable-p)
                      (org-agenda-files))))
 
-(defun org-dynamic-agenda--file-p ()
+(defun org-dynamic-agenda-predicate ()
   "Check if the file should be added to the variable `org-agenda-files'."
    (org-element-map
        (org-element-parse-buffer 'headline)
@@ -70,17 +70,17 @@ If FULL, rechecks the files with `org-dynamic-agenda-file-p'."
 The function is supposed to be run in an `org-mode' file, or in an
 optional provided FILE."
   (if (not file)
-      (org-dynamic-agenda--file-p)
+      (org-dynamic-agenda-predicate)
     (message "org-dynamic-agenda-file-p: processing %s" file)
     (if-let ((buffer (find-buffer-visiting file)))
         (with-current-buffer buffer
-          (org-dynamic-agenda--file-p))
+          (org-dynamic-agenda-predicate))
       (with-temp-buffer
         (delay-mode-hooks (org-mode))
         (insert-file-contents file)
         (setq buffer-file-name file)
         (unwind-protect
-            (org-dynamic-agenda--file-p)
+            (org-dynamic-agenda-predicate)
           (setq buffer-file-name nil))))))
 
 (defun org-dynamic-agenda-update-file-h ()
