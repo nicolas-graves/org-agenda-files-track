@@ -1,4 +1,4 @@
-;;; org-ql-dynamic-agenda.el --- Build your agenda as you work  -*- lexical-binding: t -*-
+;;; org-dynamic-agenda-ql.el --- Build your agenda as you work  -*- lexical-binding: t -*-
 
 ;; Copyright © 2023 Nicolas Graves <ngraves@ngraves.fr>
 
@@ -32,30 +32,30 @@
 
 ;;; Common
 
-(defun org-ql-dynamic-agenda-update-file (&optional file)
+(defun org-dynamic-agenda-ql-update-file (&optional file)
   "Update variable `org-agenda-files'.
 
 The function is supposed to be run in an `org-mode' file, or in an
 optional provided FILE."
   (when (and (derived-mode-p 'org-mode) (buffer-file-name))
     (let ((files (org-agenda-files)))
-      (if (org-ql-dynamic-agenda-file-p file)
+      (if (org-dynamic-agenda-ql-file-p file)
           (cl-pushnew (file-truename (buffer-file-name)) files
                       :test #'string-equal)
         (setq files (cl-delete (file-truename (buffer-file-name)) files
                                :test #'string-equal)))
       (org-store-new-agenda-file-list files))))
 
-(defun org-ql-dynamic-agenda-cleanup-files (&optional full)
+(defun org-dynamic-agenda-ql-cleanup-files (&optional full)
   "Cleanup variable `org-agenda-files'.
 
 If FULL, rechecks the files with `org-dynamic-agenda-file-p'."
   (org-store-new-agenda-file-list
-   (cl-remove-if-not (if full #'org-ql-dynamic-agenda-file-p
+   (cl-remove-if-not (if full #'org-dynamic-agenda-ql-file-p
                        #'file-readable-p)
                      (org-agenda-files))))
 
-(defun org-ql-dynamic-agenda-extract-queries ()
+(defun org-dynamic-agenda-ql-extract-queries ()
   "Extract queries from user-defined custom variables.
 
 Extracts queries from an `org-ql' set of
@@ -73,7 +73,7 @@ Extracts queries from an `org-ql' set of
                  (mapcar (lambda (view)
                            (plist-get (cdr view) :query)) org-ql-views)))))
 
-(defun org-ql-dynamic-agenda-file-p (&optional file)
+(defun org-dynamic-agenda-ql-file-p (&optional file)
   "Check if the file should be added to the variable `org-agenda-files'.
 
 This version of the function requires `org-agenda-custom-commands' to
@@ -83,7 +83,7 @@ meaning that it will load much faster on the second run.
 The function is supposed to be run in an `org-mode' file, or in an
 optional provided FILE."
   (when file
-    (message "org-ql-dynamic-agenda-file-p: processing %s" file))
+    (message "org-dynamic-agenda-ql-file-p: processing %s" file))
   (seq-reduce (lambda (bool query)
                 (or bool (org-ql-select
                            (or file (current-buffer))
@@ -91,19 +91,19 @@ optional provided FILE."
                            ;; just matching, don’t run
                            ;; org-element-headline-parser
                            :action #'point)))
-              (org-ql-dynamic-agenda-extract-queries)
+              (org-dynamic-agenda-ql-extract-queries)
               nil))
 
-(defun org-ql-dynamic-agenda-update-file-h ()
+(defun org-dynamic-agenda-ql-update-file-h ()
   "Conditionally add dynamic agenda hook to Org buffers."
   (when (and (buffer-file-name)
              (file-in-directory-p (buffer-file-name) org-directory))
-    (add-hook 'before-save-hook #'org-ql-dynamic-agenda-update-file nil t)))
+    (add-hook 'before-save-hook #'org-dynamic-agenda-ql-update-file nil t)))
 
-(add-hook 'org-mode-hook #'org-ql-dynamic-agenda-update-file-h)
-(advice-add 'org-agenda :before #'org-ql-dynamic-agenda-cleanup-files)
-(advice-add 'org-agenda-redo :before #'org-ql-dynamic-agenda-cleanup-files)
-(advice-add 'org-todo-list :before #'org-ql-dynamic-agenda-cleanup-files)
+(add-hook 'org-mode-hook #'org-dynamic-agenda-ql-update-file-h)
+(advice-add 'org-agenda :before #'org-dynamic-agenda-ql-cleanup-files)
+(advice-add 'org-agenda-redo :before #'org-dynamic-agenda-ql-cleanup-files)
+(advice-add 'org-todo-list :before #'org-dynamic-agenda-ql-cleanup-files)
 
-(provide 'org-ql-dynamic-agenda)
-;;; org-ql-dynamic-agenda.el ends here
+(provide 'org-dynamic-agenda-ql)
+;;; org-dynamic-agenda-ql.el ends here
