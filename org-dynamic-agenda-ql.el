@@ -30,7 +30,27 @@
 (require 'org-ql-view)
 (require 'cl-lib)
 
-;;; Common
+(defvar org-dynamic-agenda-ql-mode nil
+  "Toggle org-dynamic-agenda-ql mode on or off.")
+
+(define-minor-mode org-dynamic-agenda-ql-mode
+  "Toggle org-dynamic-agenda-ql mode.
+When org-dynamic-agenda-ql-mode is enabled, it updates the variable
+`org-agenda-files' based on the presence of queries in
+`org-agenda-custom-commands' and `org-ql-views'"
+  :init-value nil
+  :group 'org
+  :global nil
+  (if org-dynamic-agenda-ql-mode
+      (add-hook 'org-mode-hook 'org-dynamic-agenda-ql-update-file-h)
+    (remove-hook 'org-mode-hook 'org-dynamic-agenda-ql-update-file-h)
+    (org-dynamic-agenda-ql-cleanup-files t)))
+
+(defun org-dynamic-agenda-ql-update-file-h ()
+  "Add hook to the current buffer when in org-dynamic-agenda-ql mode."
+  (when (and (buffer-file-name)
+             (file-in-directory-p (buffer-file-name) org-directory))
+    (add-hook 'before-save-hook #'org-dynamic-agenda-ql-update-file nil t)))
 
 (defun org-dynamic-agenda-ql-update-file (&optional file)
   "Update variable `org-agenda-files'.
@@ -77,7 +97,7 @@ Extracts queries from an `org-ql' set of
   "Check if the file should be added to the variable `org-agenda-files'.
 
 This version of the function requires `org-agenda-custom-commands' to
-be defined with `orq-ql-block'. The result of this function is cached,
+be defined with `orq-ql-block'.  The result of this function is cached,
 meaning that it will load much faster on the second run.
 
 The function is supposed to be run in an `org-mode' file, or in an
@@ -93,17 +113,6 @@ optional provided FILE."
                            :action #'point)))
               (org-dynamic-agenda-ql-extract-queries)
               nil))
-
-(defun org-dynamic-agenda-ql-update-file-h ()
-  "Conditionally add dynamic agenda hook to Org buffers."
-  (when (and (buffer-file-name)
-             (file-in-directory-p (buffer-file-name) org-directory))
-    (add-hook 'before-save-hook #'org-dynamic-agenda-ql-update-file nil t)))
-
-(add-hook 'org-mode-hook #'org-dynamic-agenda-ql-update-file-h)
-(advice-add 'org-agenda :before #'org-dynamic-agenda-ql-cleanup-files)
-(advice-add 'org-agenda-redo :before #'org-dynamic-agenda-ql-cleanup-files)
-(advice-add 'org-todo-list :before #'org-dynamic-agenda-ql-cleanup-files)
 
 (provide 'org-dynamic-agenda-ql)
 ;;; org-dynamic-agenda-ql.el ends here

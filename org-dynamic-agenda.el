@@ -29,7 +29,27 @@
 (require 'org-element)
 (require 'cl-lib)
 
-;;; Common
+(defvar org-dynamic-agenda-mode nil
+  "Toggle org-dynamic-agenda mode on or off.")
+
+(define-minor-mode org-dynamic-agenda-mode
+  "Toggle org-dynamic-agenda mode.
+When org-dynamic-agenda-mode is enabled, it updates the variable
+`org-agenda-files' based on the `org-mode' files matching
+`org-dynamic-agenda-predicate' within `org-directory'."
+  :init-value nil
+  :group 'org
+  :global nil
+  (if org-dynamic-agenda-mode
+      (add-hook 'org-mode-hook 'org-dynamic-agenda-update-file-h)
+    (remove-hook 'org-mode-hook 'org-dynamic-agenda-update-file-h)
+    (org-dynamic-agenda-cleanup-files t)))
+
+(defun org-dynamic-agenda-update-file-h ()
+  "Add dynamic agenda hook to the current buffer when in org-dynamic-agenda mode."
+  (when (and (buffer-file-name)
+             (file-in-directory-p (buffer-file-name) org-directory))
+    (add-hook 'before-save-hook #'org-dynamic-agenda-update-file nil t)))
 
 (defun org-dynamic-agenda-update-file (&optional file)
   "Update variable `org-agenda-files'.
@@ -82,17 +102,6 @@ optional provided FILE."
         (unwind-protect
             (org-dynamic-agenda-predicate)
           (setq buffer-file-name nil))))))
-
-(defun org-dynamic-agenda-update-file-h ()
-  "Conditionally add dynamic agenda hook to Org buffers."
-  (when (and (buffer-file-name)
-             (file-in-directory-p (buffer-file-name) org-directory))
-    (add-hook 'before-save-hook #'org-dynamic-agenda-update-file nil t)))
-
-(add-hook 'org-mode-hook #'org-dynamic-agenda-update-file-h)
-(advice-add 'org-agenda :before #'org-dynamic-agenda-cleanup-files)
-(advice-add 'org-agenda-redo :before #'org-dynamic-agenda-cleanup-files)
-(advice-add 'org-todo-list :before #'org-dynamic-agenda-cleanup-files)
 
 (provide 'org-dynamic-agenda)
 ;;; org-dynamic-agenda.el ends here
