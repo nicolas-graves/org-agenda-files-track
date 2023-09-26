@@ -59,7 +59,7 @@ If FULL, rechecks the files with `org-dynamic-agenda-file-p'."
    (org-element-map
        (org-element-parse-buffer 'headline)
        'headline
-     ;; This is the predicate matching if a headlines makes an org-agenda-file.
+     ;; This is the predicate matching if a headline makes an org-agenda-file.
      (lambda (h)
        (eq (org-element-property :todo-type h) 'todo))
      nil 'first-match))
