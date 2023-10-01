@@ -33,6 +33,7 @@
 (defvar org-dynamic-agenda-ql-mode nil
   "Toggle org-dynamic-agenda-ql mode on or off.")
 
+;;;###autoload
 (define-minor-mode org-dynamic-agenda-ql-mode
   "Toggle org-dynamic-agenda-ql mode.
 When org-dynamic-agenda-ql-mode is enabled, it updates the variable

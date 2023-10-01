@@ -32,6 +32,7 @@
 (defvar org-dynamic-agenda-mode nil
   "Toggle org-dynamic-agenda mode on or off.")
 
+;;;###autoload
 (define-minor-mode org-dynamic-agenda-mode
   "Toggle org-dynamic-agenda mode.
 When org-dynamic-agenda-mode is enabled, it updates the variable
