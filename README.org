@@ -3,15 +3,15 @@
 
 Use =before-save-hook= on org files to dynamically build =org-agenda-files= and speed up =org-agenda=.
 
-You use a lot of small org files. Once you know what you are looking for in an agenda, parsing lots of files on every refresh is a waste of time and resources.
+When an agenda buffer is built, emacs needs to traverse each file. Once you have a lot of org files (.e.g. when using a journal or org-roam), it can become sluggish. The idea of this package is to add an candidate (for instance: with a TODO headline) org file to =org-agenda-files= when you save it. This restrains the number of files to check out when building the agenda, which thus builds faster, so that you don't have to care about the number of files in you ever-extending jounal and/or roam directories.
 
-This package will dynamically build a list of =org-agenda-files= worth considering when using =org-agenda= based on the =org-dynamic-agenda-file-p= predicate. This allows for instance to have an ever-extending journal / dailies directory (or project-specific todo / inbox files) where you handle some of your TODOs, but never having to really care about the number of files (except if you change your expectations / your =org-agenda-custom-commands= and have to manually add some =org-agenda-files=).
+More precisely, candidates are picked with the =org-dynamic-agenda-predicate= predicate. You will have to rebuild =org-agenda-files= completely if you change it or your =org-agenda-custom-commands=.
 
 ** Org-ql integration
 
 By default, the package uses the =org-element= API, but when using =(require 'org-dynamic-agenda-ql)=, the =org-ql= backend is used instead. Once the cache of =org-ql= for the org note is built, using pure =org-ql-block= commands in =org-agenda-custom-commands= should take about 1/5th of the time of the equivalent =org-agenda=. See [[https://github.com/alphapapa/org-ql/blob/master/README.org#agenda-like-views][org-ql's readme]] for more info. 
 
-To take full advantage of the =org-ql= integration and use pure =org-ql-block= commands, you should =(setq org-agenda-include-diary nil)= and use an equivalent =org-agenda-custom-commands= for the diary (I haven't done it yet, contributions welcome!).
+To take full advantage of the =org-ql= integration and use pure =org-ql-block= commands, you should =(setq org-agenda-include-diary nil)= and use an equivalent =org-agenda-custom-commands= for the diary (an alternative is to use =org-ql-views=).
 
 ** Configuration
 
@@ -58,7 +58,7 @@ It's only getting started!
 
 MAYBE TODO: redefine =org-dynamic-agenda-predicate= to match all possible =org-agenda= commands, current default config is a bit minimalist.
 
-MAYBE TODO: rewrite native =org-agenda= commands in the case of =org-ql= integration, so that all native commands are also 5x faster.
+MAYBE TODO: rewrite native =org-agenda= commands in the case of =org-ql= integration, so that all native commands are also 5x faster. Not necessary: use =org-ql-views=.
 
 MAYBE TODO: investigate integration with =org-super-agenda=.
 
