@@ -70,4 +70,4 @@ In the process of writing the package, I discovered [[https://www.armindarvish.c
 
 This package functions both on builtin functionality and with =org-ql= clarity and speed improvements.
 
-Finally, the same package could be done with =org-roam= and =org-roam-ql= (with some more work, could be faster (you might not need more speed than here though) since you can read from the database without having to parse files), but it mingles knowledge and task management (at least without setting some separating filters on database read). 
+Finally, the same package could be done with =org-roam= and =org-roam-ql= (with some more work, could be faster (you might not need more speed than here though) since you can read from the database without having to parse files), but it mingles knowledge and task management.
