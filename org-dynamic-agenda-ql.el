@@ -36,15 +36,15 @@
 ;;;###autoload
 (define-minor-mode org-dynamic-agenda-ql-mode
   "Toggle org-dynamic-agenda-ql mode.
-When org-dynamic-agenda-ql-mode is enabled, it updates the variable
+When `org-dynamic-agenda-ql-mode' is enabled, it updates the variable
 `org-agenda-files' based on the presence of queries in
 `org-agenda-custom-commands' and `org-ql-views'"
   :init-value nil
   :group 'org
   :global nil
   (if org-dynamic-agenda-ql-mode
-      (add-hook 'org-mode-hook 'org-dynamic-agenda-ql-update-file-h)
-    (remove-hook 'org-mode-hook 'org-dynamic-agenda-ql-update-file-h)
+      (add-hook 'org-mode-hook #'org-dynamic-agenda-ql-update-file-h)
+    (remove-hook 'org-mode-hook #'org-dynamic-agenda-ql-update-file-h)
     (org-dynamic-agenda-ql-cleanup-files t)))
 
 (defun org-dynamic-agenda-ql-update-file-h ()

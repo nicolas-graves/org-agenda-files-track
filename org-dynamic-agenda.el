@@ -42,8 +42,8 @@ When org-dynamic-agenda-mode is enabled, it updates the variable
   :group 'org
   :global nil
   (if org-dynamic-agenda-mode
-      (add-hook 'org-mode-hook 'org-dynamic-agenda-update-file-h)
-    (remove-hook 'org-mode-hook 'org-dynamic-agenda-update-file-h)
+      (add-hook 'org-mode-hook #'org-dynamic-agenda-update-file-h)
+    (remove-hook 'org-mode-hook #'org-dynamic-agenda-update-file-h)
     (org-dynamic-agenda-cleanup-files t)))
 
 (defun org-dynamic-agenda-update-file-h ()
