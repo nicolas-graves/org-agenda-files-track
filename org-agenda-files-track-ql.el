@@ -3,7 +3,7 @@
 ;; Copyright © 2023 Nicolas Graves <ngraves@ngraves.fr>
 
 ;; Author: Nicolas Graves <ngraves@ngraves.fr>
-;; Version: 0.2.0
+;; Version: 0.4.0
 ;; Package-Requires: ((emacs "27.1"))
 ;; Keywords: data, files, tools
 ;; URL: https://git.sr.ht/~ngraves/org-agenda-files-track
@@ -36,7 +36,7 @@
 ;; `org-ql-views'.
 
 ;; See more info here:
-;; https://git.sr.ht/~ngraves/org-agenda-files-track/blob/master/README.org
+;; https://git.sr.ht/~ngraves/org-agenda-files-track/blob/0.4.0/README.org
 
 ;;; Code:
 (require 'org-agenda)
