@@ -11,7 +11,7 @@ Two different packages are provided :
 
 - =org-dynamic-agenda= uses the native =org-element= API. In this case, candidate selection is governed by the =org-dynamic-agenda-predicate=.
 
-- =org-dynamic-agenda-ql= uses the =org-ql= backend. Once the cache of =org-ql= is built, using =org-ql-view= commands instead of =org-agenda= should additionally speed-up approximately 5 times. See [[https://github.com/alphapapa/org-ql/blob/master/README.org#agenda-like-views][org-ql's readme]] for details.
+- =org-dynamic-agenda-ql= uses the =org-ql= backend. In this case, candidate selection logic is extracted from =org-agenda-custom-commands= and =org-ql-views=. Once the cache of =org-ql= is built, using =org-ql-view= commands instead of =org-agenda= should additionally speed-up approximately 5 times. See [[https://github.com/alphapapa/org-ql/blob/master/README.org#agenda-like-views][org-ql's readme]] for details.
 
 ** Configuration
 
