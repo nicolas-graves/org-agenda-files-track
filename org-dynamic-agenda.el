@@ -1,4 +1,4 @@
-;;; org-dynamic-agenda.el --- Build your agenda as you work  -*- lexical-binding: t -*-
+;;; org-dynamic-agenda.el --- Fine-track `org-agenda-files' to speed-up `org-agenda' -*- lexical-binding: t -*-
 
 ;; Copyright © 2023 Nicolas Graves <ngraves@ngraves.fr>
 
@@ -22,7 +22,8 @@
 ;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 ;;; Commentary:
-;; Build your agenda as you work
+;; Fine-track `org-agenda-files' to speed-up `org-agenda'
+;; See more info here: https://git.sr.ht/~ngraves/org-dynamic-agenda/blob/master/README.org
 
 ;;; Code:
 (require 'org-agenda)
