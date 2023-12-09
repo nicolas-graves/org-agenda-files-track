@@ -1,25 +1,21 @@
 
 * org-dynamic-agenda
 
-Use =before-save-hook= on org files to dynamically build =org-agenda-files= and speed up =org-agenda=.
+Fine-track =org-agenda-files= to speed-up =org-agenda=.
 
-When an agenda buffer is built, emacs needs to traverse each file. Once you have a lot of org files (.e.g. when using a journal or org-roam), it can become sluggish. The idea of this package is to add an candidate (for instance: with a TODO headline) org file to =org-agenda-files= when you save it. This restrains the number of files to check out when building the agenda, which thus builds faster, so that you don't have to care about the number of files in you ever-extending jounal and/or roam directories.
+When an agenda buffer is built, Emacs visits each file listed in =org-agenda-files=. In case your tasks or events are recorded in an ever-extending journal and/or roam directories, =org-agenda= can become sluggish.
+
+This package aims to dynamically update the =org-agenda-files= variable by appending/deleting a candidate org file when it is saved. This limits the number of files to visit when building the agenda. The agenda buffer thus builds faster.
 
 More precisely, candidates are picked with the =org-dynamic-agenda-predicate= predicate. You will have to rebuild =org-agenda-files= completely if you change it or your =org-agenda-custom-commands=.
 
-** Org-ql integration
+Two different packages are provided :
+- =org-dynamic-agenda= uses the native =org-element= API.
+- =org-dynamic-agenda-ql= uses the =org-ql= backend. Once the cache of =org-ql= is built, using =org-ql-view= commands instead of =org-agenda= should additionally speed-up approximately 5 times. See [[https://github.com/alphapapa/org-ql/blob/master/README.org#agenda-like-views][org-ql's readme]] for more info.
 
-By default, the package uses the =org-element= API, but when using =(require 'org-dynamic-agenda-ql)=, the =org-ql= backend is used instead. Once the cache of =org-ql= for the org note is built, using pure =org-ql-block= commands in =org-agenda-custom-commands= should take about 1/5th of the time of the equivalent =org-agenda=. See [[https://github.com/alphapapa/org-ql/blob/master/README.org#agenda-like-views][org-ql's readme]] for more info. 
-
-To take full advantage of the =org-ql= integration and use pure =org-ql-block= commands, you should =(setq org-agenda-include-diary nil)= and use an equivalent =org-agenda-custom-commands= for the diary (an alternative is to use =org-ql-views=).
+If you want to continue using =org-agenda= alongside =org-ql=, rather than =org-ql-view=, you should =(setq org-agenda-include-diary nil)= and use pure =org-ql-block= commands in your =org-agenda-custom-commands=.
 
 ** Configuration
-
-Both values of =org-agenda-files= (a file path or a list of files) are supported, since we use a native =org-agenda= saving method. 
-
-*You should redefine the predicate inside* =org-dynamic-agenda-predicate= *to match what you consider should be your* =org-agenda-files= *.* Usually that would mean matching all the contents you can parse with =org-agenda= commands and =org-agenda-custom-commands=. You can use =pp-eval-expression= to test =(org-dynamic-agenda-file-p)= with open buffers as you modify it.
-
-With =org-ql= integration, =org-agenda-custom-commands= and =org-ql-views= are parsed directly, so you don't even have to define any predicate. It's possible that some parsing errors get in the way at first, please report them if you experience any.
 
 *** Initially defining or redefining =org-agenda-files=
 
@@ -46,19 +42,26 @@ methods the save hook cannot detect, like file synchronization."
   (message "Initialized agenda files"))
 #+end_src
 
-To avoid reinitializing =org-agenda-files= every time Emacs starts, you will likely want to set =org-agenda-files= to a single filename to persist =org-agenda-files= across Emacs sessions:
+Both values of =org-agenda-files= (a file path or a list of files) are supported, since we use a native =org-agenda= saving method. You will likely want to set =org-agenda-files= to a single filename to persist =org-agenda-files= across Emacs sessions:
+
 #+begin_src elisp
 (setq org-agenda-files
       (expand-file-name "org-agenda-files.txt" (xdg-cache-home)))
 #+end_src
 
+*** org-dynamic-agenda
+
+*You should redefine the predicate inside* =org-dynamic-agenda-predicate= *to match what you consider should be your* =org-agenda-files= *.* Usually that would mean matching all the contents you can parse with =org-agenda= commands and =org-agenda-custom-commands=. You can use =pp-eval-expression= to test =(org-dynamic-agenda-file-p)= with open buffers as you modify it.
+
+*** org-dynamic-agenda-ql
+
+With =org-ql= integration, =org-agenda-custom-commands= and =org-ql-views= are parsed directly, so you don't even have to define any predicate. It's possible that some parsing errors get in the way at first, please report them if you experience any.
+
 ** Changelog
 
 It's only getting started!
 
-MAYBE TODO: redefine =org-dynamic-agenda-predicate= to match all possible =org-agenda= commands, current default config is a bit minimalist.
-
-MAYBE TODO: rewrite native =org-agenda= commands in the case of =org-ql= integration, so that all native commands are also 5x faster. Not necessary: use =org-ql-views=.
+MAYBE TODO: redefine =org-dynamic-agenda-predicate= to match all possible =org-agenda= commands, current default config is quite minimalist.
 
 MAYBE TODO: investigate integration with =org-super-agenda=.
 
