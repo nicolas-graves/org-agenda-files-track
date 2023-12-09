@@ -1,5 +1,5 @@
 
-* org-dynamic-agenda
+* org-agenda-files-track
 
 Fine-track =org-agenda-files= to speed-up =org-agenda=.
 
@@ -9,17 +9,17 @@ This package aims to dynamically update the =org-agenda-files= variable by appen
 
 Two different packages are provided :
 
-- =org-dynamic-agenda= uses the native =org-element= API. In this case, candidate selection is governed by the =org-dynamic-agenda-predicate=.
+- =org-agenda-files-track= uses the native =org-element= API. In this case, candidate selection is governed by the =org-agenda-files-track-predicate=.
 
-- =org-dynamic-agenda-ql= uses the =org-ql= backend. In this case, candidate selection logic is extracted from =org-agenda-custom-commands= and =org-ql-views=. Once the cache of =org-ql= is built, using =org-ql-view= commands instead of =org-agenda= should additionally speed-up approximately 5 times. See [[https://github.com/alphapapa/org-ql/blob/master/README.org#agenda-like-views][org-ql's readme]] for details.
+- =org-agenda-files-track-ql= uses the =org-ql= backend. In this case, candidate selection logic is extracted from =org-agenda-custom-commands= and =org-ql-views=. Once the cache of =org-ql= is built, using =org-ql-view= commands instead of =org-agenda= should additionally speed-up approximately 5 times. See [[https://github.com/alphapapa/org-ql/blob/master/README.org#agenda-like-views][org-ql's readme]] for details.
 
 ** Configuration
 
-*** =org-dynamic-agenda=
+*** =org-agenda-files-track=
 
-*You should redefine the* =org-dynamic-agenda-predicate= *to align with your desired* =org-agenda-files= *.* Typically, this involves matching content compatible with =org-agenda= and =org-agenda-custom-commands=. Test the predicate using =pp-eval-expression= on =(org-dynamic-agenda-file-p)= with an opened candidate org file.
+*You should redefine the* =org-agenda-files-track-predicate= *to align with your desired* =org-agenda-files= *.* Typically, this involves matching content compatible with =org-agenda= and =org-agenda-custom-commands=. Test the predicate using =pp-eval-expression= on =(org-agenda-files-track-file-p)= with an opened candidate org file.
 
-*** =org-dynamic-agenda-ql=
+*** =org-agenda-files-track-ql=
 
 If you want to continue using =org-agenda= alongside =org-ql=, rather than =org-ql-view=, you should =(setq org-agenda-include-diary nil)= and use pure =org-ql-block= commands in your =org-agenda-custom-commands=. With =org-ql= integration, there's no need for explicit predicate definition.
 
@@ -28,7 +28,7 @@ If you want to continue using =org-agenda= alongside =org-ql=, rather than =org-
 Redefining =org-agenda-files= is probably necessary when =org-agenda-files-predicate= or =org-agenda-custom-commands= is changed. One simple method is to record all possible org files and then cleanup which files are agenda-files. This is the part that will take time. For instance:
 
 #+begin_src elisp
-(defun my/org-dynamic-agenda-init ()
+(defun my/org-agenda-files-track-init ()
   "(Re)initialize dynamic agenda files.
 
 This can take a long time, so it is recommended to run this only
@@ -44,7 +44,7 @@ methods the save hook cannot detect, like file synchronization."
     (lambda (subdir)
       (not (eq ?. (string-to-char (file-name-nondirectory subdir)))))))
   ;; use ql here if desired
-  (org-dynamic-agenda-cleanup-files 'full)
+  (org-agenda-files-track-cleanup-files 'full)
   (message "Initialized agenda files"))
 #+end_src
 
@@ -59,7 +59,7 @@ Both values of =org-agenda-files= (a file path or a list of files) are supported
 
 It's only getting started!
 
-MAYBE TODO: redefine =org-dynamic-agenda-predicate= to match all possible =org-agenda= commands, current default config is quite minimalist. Maybe that could be done automatically by parsing =org-agenda-custom-commands= and =org-agenda=, but then it amounts to re-create a subset of =org-ql=.
+MAYBE TODO: redefine =org-agenda-files-track-predicate= to match all possible =org-agenda= commands, current default config is quite minimalist. Maybe that could be done automatically by parsing =org-agenda-custom-commands= and =org-agenda=, but then it amounts to re-create a subset of =org-ql=.
 
 MAYBE TODO: investigate integration with =org-super-agenda=.
 
@@ -70,5 +70,7 @@ The original source of inspiration for this package is the post [[https://d12fro
 In the process of writing the package, I discovered [[https://www.armindarvish.com/en/post/emacs_workflow_dynamically_adding_files_to_org-agenda-files/][Armin Darvish's implementation]] which basically does the same thing, on which I added a few improvements (namely: native save, org-ql integration, more general utility functions). 
 
 This package functions both on builtin functionality and with =org-ql= clarity and speed improvements.
+
+At some point, this package family prefix was =org-dynamic-agenda= but settled for =org-agenda-files-track= for clarity.
 
 Finally, the same package could be done with =org-roam= and =org-roam-ql= (with some more work, could be faster (you might not need more speed than here though) since you can read from the database without having to parse files), but it mingles knowledge and task management.
