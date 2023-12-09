@@ -7,19 +7,25 @@ When an agenda buffer is built, Emacs visits each file listed in =org-agenda-fil
 
 This package aims to dynamically update the =org-agenda-files= variable by appending/deleting a candidate org file when it is saved. This limits the number of files to visit when building the agenda. The agenda buffer thus builds faster.
 
-More precisely, candidates are picked with the =org-dynamic-agenda-predicate= predicate. You will have to rebuild =org-agenda-files= completely if you change it or your =org-agenda-custom-commands=.
-
 Two different packages are provided :
-- =org-dynamic-agenda= uses the native =org-element= API.
-- =org-dynamic-agenda-ql= uses the =org-ql= backend. Once the cache of =org-ql= is built, using =org-ql-view= commands instead of =org-agenda= should additionally speed-up approximately 5 times. See [[https://github.com/alphapapa/org-ql/blob/master/README.org#agenda-like-views][org-ql's readme]] for more info.
 
-If you want to continue using =org-agenda= alongside =org-ql=, rather than =org-ql-view=, you should =(setq org-agenda-include-diary nil)= and use pure =org-ql-block= commands in your =org-agenda-custom-commands=.
+- =org-dynamic-agenda= uses the native =org-element= API. In this case, candidate selection is governed by the =org-dynamic-agenda-predicate=.
+
+- =org-dynamic-agenda-ql= uses the =org-ql= backend. Once the cache of =org-ql= is built, using =org-ql-view= commands instead of =org-agenda= should additionally speed-up approximately 5 times. See [[https://github.com/alphapapa/org-ql/blob/master/README.org#agenda-like-views][org-ql's readme]] for details.
 
 ** Configuration
 
+*** =org-dynamic-agenda=
+
+*You should redefine the* =org-dynamic-agenda-predicate= *to align with your desired* =org-agenda-files= *.* Typically, this involves matching content compatible with =org-agenda= and =org-agenda-custom-commands=. Test the predicate using =pp-eval-expression= on =(org-dynamic-agenda-file-p)= with an opened candidate org file.
+
+*** =org-dynamic-agenda-ql=
+
+If you want to continue using =org-agenda= alongside =org-ql=, rather than =org-ql-view=, you should =(setq org-agenda-include-diary nil)= and use pure =org-ql-block= commands in your =org-agenda-custom-commands=. With =org-ql= integration, there's no need for explicit predicate definition.
+
 *** Initially defining or redefining =org-agenda-files=
 
-One simple method is to record all possible org files and then cleanup which files are agenda-files. This is the part that will take time. For instance: 
+Redefining =org-agenda-files= is probably necessary when =org-agenda-files-predicate= or =org-agenda-custom-commands= is changed. One simple method is to record all possible org files and then cleanup which files are agenda-files. This is the part that will take time. For instance:
 
 #+begin_src elisp
 (defun my/org-dynamic-agenda-init ()
@@ -49,19 +55,11 @@ Both values of =org-agenda-files= (a file path or a list of files) are supported
       (expand-file-name "org-agenda-files.txt" (xdg-cache-home)))
 #+end_src
 
-*** org-dynamic-agenda
-
-*You should redefine the predicate inside* =org-dynamic-agenda-predicate= *to match what you consider should be your* =org-agenda-files= *.* Usually that would mean matching all the contents you can parse with =org-agenda= commands and =org-agenda-custom-commands=. You can use =pp-eval-expression= to test =(org-dynamic-agenda-file-p)= with open buffers as you modify it.
-
-*** org-dynamic-agenda-ql
-
-With =org-ql= integration, =org-agenda-custom-commands= and =org-ql-views= are parsed directly, so you don't even have to define any predicate. It's possible that some parsing errors get in the way at first, please report them if you experience any.
-
 ** Changelog
 
 It's only getting started!
 
-MAYBE TODO: redefine =org-dynamic-agenda-predicate= to match all possible =org-agenda= commands, current default config is quite minimalist.
+MAYBE TODO: redefine =org-dynamic-agenda-predicate= to match all possible =org-agenda= commands, current default config is quite minimalist. Maybe that could be done automatically by parsing =org-agenda-custom-commands= and =org-agenda=, but then it amounts to re-create a subset of =org-ql=.
 
 MAYBE TODO: investigate integration with =org-super-agenda=.
 
