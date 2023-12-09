@@ -60,7 +60,7 @@ When org-agenda-files-track-mode is enabled, it updates the variable
     (org-agenda-files-track-cleanup-files t)))
 
 (defun org-agenda-files-track-update-file-h ()
-  "Add dynamic agenda hook to the current buffer when in org-agenda-files-track mode."
+  "Add agenda hook to the current buffer when in org-agenda-files-track mode."
   (when (and (buffer-file-name)
              (file-in-directory-p (buffer-file-name) org-directory))
     (add-hook 'before-save-hook #'org-agenda-files-track-update-file nil t)))
