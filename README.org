@@ -63,6 +63,8 @@ MAYBE TODO: redefine =org-agenda-files-track-predicate= to match all possible =o
 
 MAYBE TODO: investigate integration with =org-super-agenda=.
 
+MAYBE TODO: investigate integration with =consult-org-agenda=.
+
 ** Relation to other files / packages
 
 The original source of inspiration for this package is the post [[https://d12frosted.io/posts/2021-01-16-task-management-with-roam-vol5.html][Task management with org-roam Vol. 5: Dynamic and fast agenda]] by Boris Buliga. But since I'd like to use my =org-roam= files for knowledge management and keep task management separate, I decided to make a package out of it to build it.
