@@ -6,7 +6,7 @@
 ;; Version: 0.2.0
 ;; Package-Requires: ((emacs "27.1"))
 ;; Keywords: data, files, tools
-;; URL: https://git.sr.ht/~ngraves/org-dynamic-agenda.el
+;; URL: https://git.sr.ht/~ngraves/org-dynamic-agenda
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
