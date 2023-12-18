@@ -4,7 +4,7 @@
 
 ;; Author: Nicolas Graves <ngraves@ngraves.fr>
 ;; Version: 0.4.0
-;; Package-Requires: ((emacs "27.1"))
+;; Package-Requires: ((emacs "27.1") (org-ql "0.7.3"))
 ;; Keywords: data, files, tools
 ;; URL: https://git.sr.ht/~ngraves/org-agenda-files-track
 
